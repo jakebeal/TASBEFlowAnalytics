@@ -1,13 +1,13 @@
 This is the TASBE Flow Analytics package, release 1.0.0-alpha
 
 This project is intended to be run using either Matlab or Octave.
-You should initialize use of the package with the following two lines:
+To use the package, you should either add it to your path, e.g.:
 
-  setenv('tasbe_path','~/projects/SynBioIRAD/TASBE_Analytics/'); 
-  addpath(getenv('tasbe_path'));
+    addpath('path to package');
 
 In use of this package, you will typically want to split your
 processing into three stages:
+
 - Creation of a ColorModel that translates raw FCS to comparable unit data
 - Using a ColorModel for batch processing of experimental data
 - Comparison and plotting of the results of batch processing
