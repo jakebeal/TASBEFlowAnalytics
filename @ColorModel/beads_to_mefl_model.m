@@ -33,10 +33,12 @@ i_FITC = find(CM,FITC_channel);
 
 % SpheroTech RCP-30-5A beads (8 peaks) - only 7 are used here, since the
 % first is not given a MEFL value in the tech notes
+fprintf('Matching to FITC values for SpheroTech RCP-30-5A beads\n');
+fprintf('Assuming Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, or GAA01-R\n');
 PeakMEFLs = [692 2192 6028 17493 35674 126907 290983];
 %PeakRelative = [77.13 108.17 135.42 164.11 183.31 217.49 239.84];
-warning('Substituting a different RCP set');
-PeakMEFLs = [791	2083	6562	16531	47575	136680	271771];
+%warning('Substituting a different RCP set');
+%PeakMEFLs = [791	2083	6562	16531	47575	136680	271771];
 
 % identify peaks
 bin_increment = 0.02;
