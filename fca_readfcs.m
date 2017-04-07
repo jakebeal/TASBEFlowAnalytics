@@ -120,6 +120,7 @@ elseif  strcmp(fcsheader_type,'FCS2.0') || strcmp(fcsheader_type,'FCS3.0') || st
     fcshdr.Creator = get_mnemonic_value('CREATOR',fcsheader_main, mnemonic_separator);
     for i=1:fcshdr.NumOfPar
         fcshdr.par(i).name = get_mnemonic_value(['$P',num2str(i),'N'],fcsheader_main, mnemonic_separator);
+        fcshdr.par(i).rawname = fcshdr.par(i).name;
         fcshdr.par(i).range = str2num(get_mnemonic_value(['$P',num2str(i),'R'],fcsheader_main, mnemonic_separator));
         fcshdr.par(i).bit = str2num(get_mnemonic_value(['$P',num2str(i),'B'],fcsheader_main, mnemonic_separator));
 
@@ -150,7 +151,8 @@ elseif  strcmp(fcsheader_type,'FCS2.0') || strcmp(fcsheader_type,'FCS3.0') || st
         % $PKNn Count in peak channel of univariatehistogram for parameter n.
         % $PnS Name used for parameter n.
         replacename = get_mnemonic_value(['$P',num2str(i),'S'],fcsheader_main, mnemonic_separator);
-        if(numel(replacename)>0), fcshdr.par(i).name = replacename; end;
+        % Replace name if nickname is present and not just whitespace
+        if(numel(replacename)>0 && ~isempty(find(~isspace(replacename), 1))), fcshdr.par(i).name = replacename; end;
         % FCS 3.1-only parameters:
         if(strcmp(fcsheader_type,'FCS3.1')), 
             fcshdr.par(i).calibration = get_mnemonic_value(['$P',num2str(i),'CALIBRATION'],fcsheader_main, mnemonic_separator);
