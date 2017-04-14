@@ -34,7 +34,7 @@ fa = getFractionActive(results);
 h = figure('PaperPosition',[1 1 5 3.66]);
 set(h,'visible','off');
 for i=1:step:n_bins
-    which = fa(i,:)>0.9;
+    which = fa(i,:)>getMinFractionActive(AP);
     loglog(inducer_levels(which),input_mean(i,which),'-','Color',hsv2rgb([hues(i) 1 0.9])); hold on;
     if ticks
         loglog(inducer_levels(which),input_mean(i,which),'+','Color',hsv2rgb([hues(i) 1 0.9])); hold on;
