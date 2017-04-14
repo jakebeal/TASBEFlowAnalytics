@@ -24,6 +24,7 @@ FITC_channel = CM.FITC_channel;
 if (nargin < 4)
     plot = CM.bead_plot;
 end
+
 peak_threshold = CM.bead_peak_threshold;
 bin_min = CM.bead_min;
 bin_max = CM.bead_max;
@@ -33,12 +34,20 @@ i_FITC = find(CM,FITC_channel);
 
 % SpheroTech RCP-30-5A beads (8 peaks) - only 7 are used here, since the
 % first is not given a MEFL value in the tech notes
-fprintf('Matching to FITC values for SpheroTech RCP-30-5A beads\n');
-fprintf('Assuming Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, or GAA01-R\n');
-PeakMEFLs = [692 2192 6028 17493 35674 126907 290983];
+% fprintf('Matching to FITC values for SpheroTech RCP-30-5A beads\n');
+% fprintf('Assuming Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, or GAA01-R\n');
+% PeakMEFLs = [692 2192 6028 17493 35674 126907 290983];
 %PeakRelative = [77.13 108.17 135.42 164.11 183.31 217.49 239.84];
 %warning('Substituting a different RCP set');
 %PeakMEFLs = [791	2083	6562	16531	47575	136680	271771];
+
+PeakMEFLs = get_bead_peaks(CM.bead_model,CM.bead_channel,CM.bead_batch);
+if(PeakMEFLs>7)
+    PeakMEFLs = PeakMEFLs((end-6):end);
+else if(PeakMEFLs<7)
+        error('Cannot use beads with less than 7 peaks');
+    end
+end
 
 % identify peaks
 bin_increment = 0.02;
@@ -243,6 +252,7 @@ if plot
     end
 end
 
-UT = UnitTranslation('RCP-30-5A',k_MEFL,first_peak,fit_error, peak_sets);
+UT = UnitTranslation([CM.bead_model ':' CM.bead_channel ':' CM.bead_batch],k_MEFL, first_peak, fit_error, peak_sets);
 
 end
+
