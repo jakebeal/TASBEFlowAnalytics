@@ -60,10 +60,12 @@ for k=1:n_channels
     if numel(data),
         tmp_PEM = PlasmidExpressionModel(data(:,k),CFP_af,CFP_noise,getMEFLPerPlasmid(analysisParams),drop_threshold,n_components);
         dist = get_fp_dist(tmp_PEM);
-        sortable = zeros(n_components,3);
-        sortable(:,1) = dist.mu; sortable(:,2) = dist.Sigma(:); sortable(:,3) = dist.weight;
-        sortrows(sortable);
-        popcmeans(:,k) = sortable(:,1); popcstds(:,k) = sortable(:,2);  popcweights(:,k) = sortable(:,3);
+        if ~isempty(dist)
+            sortable = zeros(n_components,3);
+            sortable(:,1) = dist.mu; sortable(:,2) = dist.Sigma(:); sortable(:,3) = dist.weight;
+            sortrows(sortable);
+            popcmeans(:,k) = sortable(:,1); popcstds(:,k) = sortable(:,2);  popcweights(:,k) = sortable(:,3);
+        end
         if k==c_index, PEM = tmp_PEM; end;
     end
 end
