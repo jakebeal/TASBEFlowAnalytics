@@ -30,11 +30,12 @@ if linear(1), xv = xc; else xv = log10(xc(pos)); end;
 if linear(2), yv = yc; else yv = log10(yc(pos)); end;
 
 if nargin >= 4 && density
+    smoothing = 10;
     h = figure('PaperPosition',[1 1 5 5]);
     if ~visible, set(h,'visible','off'); end;
     if nargin < 5, range = []; end;
     if density >= 1, type = 'image'; else type = 'contour'; end
-    smoothhist2D([xv yv],10,[200, 200],[],type,range,largeoutliers);
+    smoothhist2D([xv yv],smoothing,[200, 200],[],type,range,largeoutliers);
 else
     h = figure('PaperPosition',[1 1 5 5]);
     if ~visible, set(h,'visible','off'); end;

@@ -224,8 +224,8 @@ if(n_peaks>=2)
     k_MEFL = 10^constrained_fit;
 else % 1 peak
     warning('TASBE:Beads','Only one bead peak found, assuming brightest');
-    fit_error = 0; first_peak = 8;
-    k_MEFL = PeakMEFLs(7)/peak_means;
+    fit_error = 0; first_peak = numel(PeakMEFLs);
+    k_MEFL = PeakMEFLs(end)/peak_means;
 end;
 
 % Optional plot

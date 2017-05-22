@@ -60,6 +60,12 @@
             
             %%%% GAUSSIAN MIXTURE MODEL METHOD
             which = cfp_data>drop_threshold;
+            if(sum(which)==0)
+                warning('Model:CFPDistributionSeparation','No data to model');
+                PEM=class(PEM,'PlasmidExpressionModel');
+                return;
+            end
+            
             % Seeded centers: [8], [5 8], [5 6.5 8], [5 6 7 8], ...
             min_center =  log10(getMeanMEFL(CFP_af));
             if n_components == 1, 
