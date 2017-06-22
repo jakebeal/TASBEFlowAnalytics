@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 History & Authorship of TASBE Flow Analytics:
 
 The core functionalities of the TASBE Flow Analytics package was
@@ -29,35 +28,3 @@ DARPA under contracts HR0011-10-C-0168 and W911NF-11-054 and by NSF
 Award #1522074; all views and conclusions embodied in this
 distribution are those of the authors and not DARPA, NSF, or the
 U.S. Government.
-=======
-History & Authorship of TASBE Flow Analytics:
-
-The core functionalities of the TASBE Flow Analytics package was
-originally created at BBN Technologies in 2010-2011 in support of the
-"Tool-Chain to Accelerate Synthetic Biological Engineering"
-project. It was then organized and systematized in 2012 and has been
-improved contiuously ever since in response to evolving usage needs.
-
-The main authors of the TASBE Flow Analytics package are:
-
-  Jacob Beal, Aaron Adler, and Fusun Yaman.
-
-
-If you make use of the TASBE Flow Analytics package, please cite
-the following two publications:
-
-* Jacob Beal, "Bridging the Gap: A Roadmap to Breaking the Biological
-  Design Barrier," Frontiers in Bioengineering and Biotechnology,
-  2:87. doi:10.3389/fbioe.2014.00087, January 2015.
-
-* Jacob Beal, Ron Weiss, Fusun Yaman, Noah Davidsohn, and Aaron Adler,
-  "A Method for Fast, High- Precision Characterization of Synthetic
-  Biology Devices," MIT CSAIL Tech Report 2012-008, April 2012.
-
-
-Development of the TASBE Flow Analytics was partially supported by
-DARPA under contracts HR0011-10-C-0168 and W911NF-11-054 and by NSF
-Award #1522074; all views and conclusions embodied in this
-distribution are those of the authors and not DARPA, NSF, or the
-U.S. Government.
->>>>>>> 1071986569dcf4aa68594003eedce5ae026f8d04
