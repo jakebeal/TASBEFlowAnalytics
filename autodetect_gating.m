@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [gate model] = autodetect_gating(file,AGP)
+function [gate model] = autodetect_gating(file,AGP, output_path)
 % AGP = AutogateParameters
 % Model is a gmdistribution
 
@@ -60,7 +60,7 @@ end
 model.selected_components = eigsort(AGP.selected_components);
 
 % reweight components to make select components tighter
-reweight = dist.PComponents;
+reweight = dist.ComponentProportion;
 lossweight = AGP.tightening*sum(reweight(model.selected_components));
 for i=1:AGP.k_components,
     if(isempty(find(i==model.selected_components, 1)))
@@ -76,7 +76,7 @@ model.distribution = gmdistribution(dist.mu,dist.Sigma,reweight);
 model.deviations = AGP.deviations;
 
 % gate function just runs autogate_filter on model
-gate = afslim(@(fn_fcshdr,fn_rawfcs)(autogate_filter(model,fn_fcshdr,fn_rawfcs)),model);
+gate = @(fcshdr,rawfcs)(autogate_filter(model,fcshdr,rawfcs));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Make the plots
@@ -131,5 +131,5 @@ for i=1:2:n_channels,
     which = convhull(gated_sub(:,1),gated_sub(:,2));
     plot(gated_sub(which,1),gated_sub(which,2),'r-','LineWidth',2);
 
-    outputfig(h,sprintf('AutomaticGate-%s-vs-%s',AGP.channel_names{i},AGP.channel_names{i+1}));
+    outputfig(h,sprintf('AutomaticGate-%s-vs-%s',AGP.channel_names{i},AGP.channel_names{i+1}), output_path);
 end
