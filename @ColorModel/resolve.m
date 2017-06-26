@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function CM=resolve(CM, settings) % call after construction and configuration
+function CM=resolve(CM, settings, print_path) % call after construction and configuration
     % fill in channel descriptors from designated file (default = beadfile)
     if hasSetting(settings,'channel_template_file'), 
         template = getSetting(settings,'channel_template_file'); 
@@ -27,11 +27,11 @@ function CM=resolve(CM, settings) % call after construction and configuration
         CM.unit_translation = UnitTranslation('Specified',k_MEFL,[],[],{});
         warning('TASBE:ColorModel','Warning: overriding units with specified k_MEFL value of %d',k_MEFL);
     else
-        CM.unit_translation = beads_to_mefl_model(CM,settings,CM.BeadFile);
+        CM.unit_translation = beads_to_mefl_model(CM,settings,CM.BeadFile, 2, print_path);
     end
     
     % Next, autofluorescence and compensation model
-    CM.autofluorescence_model = computeAutoFluorescence(CM,settings);
+    CM.autofluorescence_model = computeAutoFluorescence(CM,settings, print_path);
     if hasSetting(settings,'override_compensation')
         matrix = getSetting(settings,'override_compensation');
         warning('TASBE:ColorModel','Warning: overriding compensation model with specified values.');
