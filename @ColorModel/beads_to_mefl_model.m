@@ -1,4 +1,4 @@
-function UT = beads_to_mefl_model(CM, settings, beadfile, plot, print_path)
+function UT = beads_to_mefl_model(CM, settings, beadfile, plot, path)
 % BEADS_TO_MEFL_MODEL: Computes a linear function for transforming FACS 
 % measurements on the FITC channel into MEFLs, using a calibration run of
 % RCP-30-5A.
@@ -19,10 +19,13 @@ function UT = beads_to_mefl_model(CM, settings, beadfile, plot, print_path)
 % under the terms of the GNU General Public License, with a linking
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
-%print_path = 'P:\N022 LANL\CM_1FG';
+
 FITC_channel = CM.FITC_channel;
 if (nargin < 4)
     plot = CM.bead_plot;
+end
+if (nargin < 5)
+    path = getSetting(settings, 'path', './');
 end
 
 peak_threshold = CM.bead_peak_threshold;
@@ -116,14 +119,12 @@ if plot
         semilogx([segment_peak_means(i) segment_peak_means(i)],[0 max(bin_counts)],'r-');
     end
     title('Peak identification for SPHERO RCP-30-5A beads');
-    path = getSetting(settings, 'path', './');
     if segment_secondary
         xlabel(['FACS ' segmentName ' units']); ylabel('Beads');
-        outputfig(h,'bead-calibration-secondary',print_path);
-        
+        outputfig(h,'bead-calibration-secondary',path);
     else
         xlabel('FACS FITC units'); ylabel('Beads');
-        outputfig(h,'bead-calibration',print_path);
+        outputfig(h,'bead-calibration',path);
     end
 end
 
@@ -173,8 +174,7 @@ for i=1:numel(CM.Channels),
         end
         xlabel(sprintf('FACS a.u. for %s channel',getPrintName(CM.Channels{i}))); ylabel('Beads');
         title(sprintf('Peak identification for %s for SPHERO RCP-30-5A beads',getPrintName(CM.Channels{i})));
-        path = getSetting(settings, 'path', './');
-        outputfig(h, sprintf('bead-calibration-%s',getPrintName(CM.Channels{i})),print_path);
+        outputfig(h, sprintf('bead-calibration-%s',getPrintName(CM.Channels{i})),path);
     end
 end
 
@@ -215,8 +215,7 @@ if(n_peaks>=2)
         title('Peak identification for SPHERO RCP-30-5A beads');
         %legend('Location','NorthWest','Observed','Linear Fit','Constrained Fit');
         legend('Location','NorthWest','Observed','Constrained Fit');
-        path = getSetting(settings, 'path', './');
-        outputfig(h,'bead-fit-curve',print_path);
+        outputfig(h,'bead-fit-curve',path);
     end
     % Final fit_error should be close to zero / 1-fold
     if(cf_error>1.05), warning('TASBE:Beads','Bead calibration may be incorrect: fit more than 5 percent off: error = %.2d',cf_error); end;
@@ -247,8 +246,7 @@ if plot
         end
         xlabel('FACS FITC units'); ylabel(['FACS ' segmentName ' units']);
         title('Peak identification for SPHERO RCP-30-5A beads');
-        path = getSetting(settings, 'path', './');
-        outputfig(h,'bead-calibration',print_path);
+        outputfig(h,'bead-calibration',path);
     end
 end
 

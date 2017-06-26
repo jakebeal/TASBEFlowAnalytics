@@ -6,7 +6,11 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function autofluorescence_model=computeAutoFluorescence(CM,settings, print_path)
+function autofluorescence_model=computeAutoFluorescence(CM,settings, path)
+
+if (nargin < 3)
+    path = getSetting(settings, 'path', './');
+end
 
 % Import data from FCS files
 [rawfcs fcshdr] = read_filtered_au(CM,CM.BlankFile);
@@ -44,8 +48,7 @@ for i=1:numel(CM.Channels)
                 ylabel('Count');
                 xlim([-100 maxbin]);
                 title('Autofluorescence Model');
-                path = getSetting(settings, 'path', './');
-                outputfig(h, sprintf('autofluorescence-%s',getPrintName(CM.Channels{i})),print_path);
+                outputfig(h, sprintf('autofluorescence-%s',getPrintName(CM.Channels{i})),path);
             end
             
             found = true; break;

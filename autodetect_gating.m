@@ -13,6 +13,10 @@ function [gate model] = autodetect_gating(file,AGP, output_path)
 [unscaled fcshdr rawfcs] = fca_readfcs(file);
 
 if(nargin<2), AGP = AutogateParameters(); end;
+if (nargin < 3)
+    output_path = getSetting(settings, 'path', './');
+end
+
 
 n_channels = numel(AGP.channel_names);
 
