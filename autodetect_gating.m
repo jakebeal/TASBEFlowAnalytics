@@ -76,7 +76,7 @@ model.distribution = gmdistribution(dist.mu,dist.Sigma,reweight);
 model.deviations = AGP.deviations;
 
 % gate function just runs autogate_filter on model
-gate = @(fcshdr,rawfcs)(autogate_filter(model,fcshdr,rawfcs));
+gate = afslim(@(fcshdr,rawfcs)(autogate_filter(model,fcshdr,rawfcs)),model);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Make the plots
