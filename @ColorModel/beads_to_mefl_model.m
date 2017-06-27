@@ -211,6 +211,9 @@ if(n_peaks>=2)
         loglog(peak_means,PeakMEFLs((1:n_peaks)+best_i),'b*-'); hold on;
         %loglog([1 peak_means],[1 peak_means]*(10.^model(2)),'r+--');
         loglog([1 peak_means],[1 peak_means]*(10.^constrained_fit),'go--');
+        for i=1:n_peaks
+            text(peak_means(i),PeakMEFLs(i+best_i)*1.3,sprintf('%i',i+first_peak-1));
+        end
         xlabel('FACS FITC units'); ylabel('Beads MEFLs');
         title('Peak identification for SPHERO RCP-30-5A beads');
         %legend('Location','NorthWest','Observed','Linear Fit','Constrained Fit');
