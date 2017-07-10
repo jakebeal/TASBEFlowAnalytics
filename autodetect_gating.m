@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [gate model] = autodetect_gating(file,AGP, output_path)
+function [gate model] = autodetect_gating(file, AGP, output_path)
 % AGP = AutogateParameters
 % Model is a gmdistribution
 
@@ -14,7 +14,7 @@ function [gate model] = autodetect_gating(file,AGP, output_path)
 
 if(nargin<2), AGP = AutogateParameters(); end;
 if (nargin < 3)
-    output_path = getSetting(settings, 'path', './');
+    output_path = './';
 end
 
 

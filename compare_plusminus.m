@@ -56,7 +56,8 @@ m_valid = m_active >= getMinFractionActive(m_AP) & ...
     m_bincounts >= getMinValidCount(m_AP);
 
 % Zip together into output
-imeans = zeros(n_bins,numel(inductions),2); omeans = imeans; ostds = omeans; ostdofmeans = omeans; bincounts = omeans; valid = omeans;
+imeans = zeros(n_bins,numel(inductions),2); 
+omeans = imeans; ostds = omeans; ostdofmeans = omeans; bincounts = omeans; valid = omeans;
 imeans(:,:,1) = p_imeans; imeans(:,:,2) = m_imeans;
 istds(:,:,1) = p_istds; istds(:,:,2) = m_istds;
 istdofmeans(:,:,1) = p_istdofmeans; istdofmeans(:,:,2) = m_istdofmeans;
@@ -68,6 +69,8 @@ valid(:,:,1) = p_valid; valid(:,:,2) = m_valid;
 
 bothvalid = p_valid & m_valid;
 pm_ratios = omeans(:,:,1)./omeans(:,:,2);
+iSNR = SNR(imeans(:,:,1), imeans(:,:,2), istds(:,:,1), istds(:,:,2));
+oSNR = SNR(omeans(:,:,1), omeans(:,:,2), ostds(:,:,1), ostds(:,:,2));
 
 mean_ratio = zeros(size(pm_ratios,2),1);
 for j=1:size(pm_ratios,2),
@@ -77,3 +80,6 @@ end
 
 pm_results = PlusMinusResults(p_results, m_results, mean_ratio, bincounts, valid,...
     pm_ratios, imeans, istds, istdofmeans, omeans, ostds, ostdofmeans);
+
+pm_results.InputSNR = iSNR;
+pm_results.OutputSNR = oSNR;

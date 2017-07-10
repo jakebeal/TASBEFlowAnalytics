@@ -150,3 +150,41 @@ if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
 if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
 title(['+/- Ratios for ',outputsettings.StemName]);
 outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-ratios'],outputsettings.Directory);
+
+
+% SNR plots
+if n_var == 1, 
+    pmlegendentries{1} = 'Output SNR';
+end
+
+h = figure('PaperPosition',[1 1 5 3.66]);
+set(h,'visible','off');
+for i=1:step:n_var
+    which = pm_results.Valid(:,i,1) & pm_results.Valid(:,i,2);
+    semilogx(bin_centers(which),pm_results.OutputSNR(which,i),[ptick '-'],'Color',hsv2rgb([hues(i) 1 0.9])); hold on;
+end;
+for i=1:step:n_var
+    which = pm_results.Valid(:,i,1) & pm_results.Valid(:,i,2);
+    loglog(bin_centers(which),pm_results.InputSNR(which,i),[ntick '--'],'Color',hsv2rgb([hues(i) 1 0.9])); hold on;
+end;
+xlabel(['CFP ' cfp_units]); ylabel('SNR (db)');
+set(gca,'XScale','log');
+legend('Location','Best',pmlegendentries,'Input SNR');
+title([outputsettings.StemName,' SNR vs. CFP']);
+outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-SNR'],outputsettings.Directory);
+
+if n_var == 1, 
+    pmlegendentries{1} = '\Delta SNR';
+end
+
+h = figure('PaperPosition',[1 1 5 3.66]);
+set(h,'visible','off');
+for i=1:step:n_var
+    which = pm_results.Valid(:,i,1) & pm_results.Valid(:,i,2);
+    semilogx(bin_centers(which),pm_results.OutputSNR(which,i)-pm_results.InputSNR(which,i),[ptick '-'],'Color',hsv2rgb([hues(i) 1 0.9])); hold on;
+end;
+xlabel(['CFP ' cfp_units]); ylabel('\Delta SNR (db)');
+set(gca,'XScale','log');
+legend('Location','Best',pmlegendentries);
+title([outputsettings.StemName,'\Delta SNR vs. CFP']);
+outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-dSNR'],outputsettings.Directory);
