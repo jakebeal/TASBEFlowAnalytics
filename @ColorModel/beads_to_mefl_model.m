@@ -200,26 +200,11 @@ if(n_peaks>=2)
     else % 2 peaks
         warning('TASBE:Beads','Only two bead peaks found, assuming brightest two');
         [poly,S] = polyfit(log10(peak_means),log10(PeakMEFLs(6:7)),1);
-        fit_error = S.normr; model = poly; first_peak = 7;
+        fit_error = S.normr; model = poly; first_peak = numel(PeakMEFLs)-1;
         best_i = 5; % for constrained fit and plot
     end
     constrained_fit = mean(log10(PeakMEFLs((1:n_peaks)+best_i)) - log10(peak_means));
     cf_error = mean(10.^abs(log10((PeakMEFLs((1:n_peaks)+best_i)./peak_means) / 10.^constrained_fit)));
-    if plot>1
-        h = figure('PaperPosition',[1 1 5 3.66]);
-        set(h,'visible','off');
-        loglog(peak_means,PeakMEFLs((1:n_peaks)+best_i),'b*-'); hold on;
-        %loglog([1 peak_means],[1 peak_means]*(10.^model(2)),'r+--');
-        loglog([1 peak_means],[1 peak_means]*(10.^constrained_fit),'go--');
-        for i=1:n_peaks
-            text(peak_means(i),PeakMEFLs(i+best_i)*1.3,sprintf('%i',i+first_peak-1));
-        end
-        xlabel('FACS FITC units'); ylabel('Beads MEFLs');
-        title('Peak identification for SPHERO RCP-30-5A beads');
-        %legend('Location','NorthWest','Observed','Linear Fit','Constrained Fit');
-        legend('Location','NorthWest','Observed','Constrained Fit');
-        outputfig(h,'bead-fit-curve',path);
-    end
     % Final fit_error should be close to zero / 1-fold
     if(cf_error>1.05), warning('TASBE:Beads','Bead calibration may be incorrect: fit more than 5 percent off: error = %.2d',cf_error); end;
     %if(abs(model(1)-1)>0.05), warning('TASBE:Beads','Bead calibration probably incorrect: fit more than 5 percent off: slope = %.2d',model(1)); end;
@@ -229,6 +214,23 @@ else % 1 peak
     fit_error = 0; first_peak = numel(PeakMEFLs);
     k_MEFL = PeakMEFLs(end)/peak_means;
 end;
+
+% Plot bead fit curve
+if plot>1
+    h = figure('PaperPosition',[1 1 5 3.66]);
+    set(h,'visible','off');
+    loglog(peak_means,PeakMEFLs((1:n_peaks)+first_peak-1),'b*-'); hold on;
+    %loglog([1 peak_means],[1 peak_means]*(10.^model(2)),'r+--');
+    loglog([1 peak_means],[1 peak_means]*k_MEFL,'go--');
+    for i=1:n_peaks
+        text(peak_means(i),PeakMEFLs(i+first_peak-1)*1.3,sprintf('%i',i+first_peak-1));
+    end
+    xlabel('FACS FITC units'); ylabel('Beads MEFLs');
+    title('Peak identification for SPHERO RCP-30-5A beads');
+    %legend('Location','NorthWest','Observed','Linear Fit','Constrained Fit');
+    legend('Location','NorthWest','Observed','Constrained Fit');
+    outputfig(h,'bead-fit-curve',path);
+end
 
 % Optional plot
 if plot
