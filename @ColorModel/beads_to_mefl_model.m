@@ -219,11 +219,12 @@ end;
 if plot>1
     h = figure('PaperPosition',[1 1 5 3.66]);
     set(h,'visible','off');
-    loglog(peak_means,PeakMEFLs((1:n_peaks)+first_peak-1),'b*-'); hold on;
+    % TODO: Should be first_peak-1, but we currently assum 7 PeakMEFLs for an 8-peak file
+    loglog(peak_means,PeakMEFLs((1:n_peaks)+first_peak-2),'b*-'); hold on;
     %loglog([1 peak_means],[1 peak_means]*(10.^model(2)),'r+--');
     loglog([1 peak_means],[1 peak_means]*k_MEFL,'go--');
     for i=1:n_peaks
-        text(peak_means(i),PeakMEFLs(i+first_peak-1)*1.3,sprintf('%i',i+first_peak-1));
+        text(peak_means(i),PeakMEFLs(i+first_peak-2)*1.3,sprintf('%i',i+first_peak-1));
     end
     xlabel('FACS FITC units'); ylabel('Beads MEFLs');
     title('Peak identification for SPHERO RCP-30-5A beads');
