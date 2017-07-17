@@ -81,7 +81,7 @@ segment_peak_means = []; % segmentation channel (normally FITC)
 peak_means = [];
 peak_counts = [];
 if (isempty(peak_threshold)),
-    peak_threshold = 0.1*max(bin_counts); % number of points to start a peak
+    peak_threshold = 0.2 * max(bin_counts); % number of points to start a peak
 end
 if numel(peak_threshold)==1
     peak_threshold = peak_threshold*ones(numel(CM.Channels),1);

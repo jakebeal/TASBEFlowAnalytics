@@ -20,7 +20,7 @@ function [data fcshdr] = read_filtered_au(CM,filename)
     end
     % make sure we didn't throw away huge amounts...
     if numel(data)<numel(rawfcs)*0.1 % Threshold: at least 10% retained
-        warning('Model:Discard','Filters may be discarding too much data: only %d%% retained',numel(data)/numel(rawfcs)*100);
+        warning('Model:Discard','Filters may be discarding too much data: only %d%% retained in %s',numel(data)/numel(rawfcs)*100,filename);
     end
     
     % if requested to dequantize, add a random value in [-0.5, 0.5]
