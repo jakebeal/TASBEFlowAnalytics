@@ -1,4 +1,4 @@
-function UT = beads_to_mefl_model(CM, settings, beadfile, plot, path)
+function UT = beads_to_mefl_model(CM, settings, beadfile, makePlots, path)
 % BEADS_TO_MEFL_MODEL: Computes a linear function for transforming FACS 
 % measurements on the FITC channel into MEFLs, using a calibration run of
 % RCP-30-5A.
@@ -22,7 +22,7 @@ function UT = beads_to_mefl_model(CM, settings, beadfile, plot, path)
 
 FITC_channel = CM.FITC_channel;
 if (nargin < 4)
-    plot = CM.bead_plot;
+    makePlots = CM.bead_plot;
 end
 if (nargin < 5)
     path = getSetting(settings, 'path', './');
@@ -70,10 +70,22 @@ end
 bead_data = get_fcs_color(fcsdat,fcshdr,nameFC);
 segment_data = get_fcs_color(fcsdat,fcshdr,segmentName);
 
+% The full range of bins (for plotting purposes) covers everything from 1 to the max value (rounded up)
+range_max = max(bin_max,ceil(log10(max(bead_data(:)))));
+range_bin_edges = 10.^(0:bin_increment:range_max);
+range_n = (size(range_bin_edges,2)-1);
+range_bin_centers = range_bin_edges(1:range_n)*10.^(bin_increment/2);
+
+% All of this should be converted to use bin sequence classes
 bin_counts = zeros(size(bin_centers));
 for i=1:n
     which = segment_data(:)>bin_edges(i) & segment_data(:)<=bin_edges(i+1);
     bin_counts(i) = sum(which);
+end
+range_bin_counts = zeros(size(bin_centers));
+for i=1:range_n
+    which = segment_data(:)>range_bin_edges(i) & segment_data(:)<=range_bin_edges(i+1);
+    range_bin_counts(i) = sum(which);
 end
 
 n_peaks = 0;
@@ -110,24 +122,6 @@ for i=1:n
         end
     end
 end
-% Optional plot
-if plot
-    h = figure('PaperPosition',[1 1 5 3.66]);
-    set(h,'visible','off');
-    semilogx(bin_centers,bin_counts); hold on;
-    for i=1:n_peaks
-        semilogx([segment_peak_means(i) segment_peak_means(i)],[0 max(bin_counts)],'r-');
-    end
-    title('Peak identification for SPHERO RCP-30-5A beads');
-    if segment_secondary
-        xlabel(['FACS ' segmentName ' units']); ylabel('Beads');
-        outputfig(h,'bead-calibration-secondary',path);
-    else
-        xlabel('FACS FITC units'); ylabel('Beads');
-        outputfig(h,'bead-calibration',path);
-    end
-end
-
 
 % Gather the peaks from all the channels
 peak_sets = cell(numel(CM.Channels),1);
@@ -137,6 +131,11 @@ for i=1:numel(CM.Channels),
     for j=1:n
         which = alt_bead_data(:)>bin_edges(j) & alt_bead_data(:)<=bin_edges(j+1);
         alt_bin_counts(j) = sum(which);
+    end
+    alt_range_bin_counts = zeros(size(range_bin_centers));
+    for j=1:range_n
+        which = alt_bead_data(:)>range_bin_edges(j) & alt_bead_data(:)<=range_bin_edges(j+1);
+        alt_range_bin_counts(j) = sum(which);
     end
 
     % identify peaks
@@ -165,13 +164,19 @@ for i=1:numel(CM.Channels),
     peak_sets{i} = alt_peak_means;
 
     % Make plots for all peaks, not just FITC
-    if plot >= 2
+    if makePlots >= 2
+        graph_max = max(alt_range_bin_counts);
         h = figure('PaperPosition',[1 1 5 3.66]);
         set(h,'visible','off');
-        semilogx(bin_centers,alt_bin_counts); hold on;
+        semilogx(range_bin_centers,alt_range_bin_counts,'b-'); hold on;
         for j=1:alt_n_peaks
-            semilogx([alt_peak_means(j) alt_peak_means(j)],[0 max(alt_bin_counts)],'r-');
+            semilogx([alt_peak_means(j) alt_peak_means(j)],[0 graph_max],'r-');
         end
+        % show range where peaks were searched for
+        plot(10.^[bin_min bin_min],[0 graph_max],'k:');
+        text(10.^(bin_min),graph_max/2,'peak search min value','Rotation',90,'FontSize',7,'VerticalAlignment','top','FontAngle','italic');
+        plot(10.^[bin_max bin_max],[0 graph_max],'k:');
+        text(10.^(bin_max),graph_max/2,'peak search max value','Rotation',90,'FontSize',7,'VerticalAlignment','bottom','FontAngle','italic');
         xlabel(sprintf('FACS a.u. for %s channel',getPrintName(CM.Channels{i}))); ylabel('Beads');
         title(sprintf('Peak identification for %s for SPHERO RCP-30-5A beads',getPrintName(CM.Channels{i})));
         outputfig(h, sprintf('bead-calibration-%s',getPrintName(CM.Channels{i})),path);
@@ -215,8 +220,35 @@ else % 1 peak
     k_MEFL = PeakMEFLs(end)/peak_means;
 end;
 
+% Plot fitted channel
+if makePlots
+    graph_max = max(range_bin_counts);
+    h = figure('PaperPosition',[1 1 5 3.66]);
+    set(h,'visible','off');
+    semilogx(range_bin_centers,range_bin_counts,'b-'); hold on;
+    % Show identified peaks
+    for i=1:n_peaks
+        semilogx([segment_peak_means(i) segment_peak_means(i)],[0 graph_max],'r-');
+        text(peak_means(i),graph_max,sprintf('%i',i+first_peak-1),'VerticalAlignment','top');
+    end
+    % show range where peaks were searched for
+    plot(10.^[bin_min bin_min],[0 graph_max],'k:');
+    text(10.^(bin_min),graph_max/2,'peak search min value','Rotation',90,'FontSize',7,'VerticalAlignment','top','FontAngle','italic');
+    plot(10.^[bin_max bin_max],[0 graph_max],'k:');
+    text(10.^(bin_max),graph_max/2,'peak search max value','Rotation',90,'FontSize',7,'VerticalAlignment','bottom','FontAngle','italic');
+    title('Peak identification for SPHERO RCP-30-5A beads');
+    if segment_secondary
+        xlabel(['FACS ' segmentName ' units']); ylabel('Beads');
+        outputfig(h,'bead-calibration-secondary',path);
+    else
+        xlabel('FACS FITC units'); ylabel('Beads');
+        outputfig(h,'bead-calibration',path);
+    end
+end
+
+
 % Plot bead fit curve
-if plot>1
+if makePlots>1
     h = figure('PaperPosition',[1 1 5 3.66]);
     set(h,'visible','off');
     % TODO: Should be first_peak-1, but we currently assum 7 PeakMEFLs for an 8-peak file
@@ -233,8 +265,8 @@ if plot>1
     outputfig(h,'bead-fit-curve',path);
 end
 
-% Optional plot
-if plot
+% Plog 2D fit
+if makePlots
     % plot FITC linearly, since we wouldn't be using a secondary if the values weren't very low
     % there is probably much negative data
     if segment_secondary
