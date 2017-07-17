@@ -205,7 +205,7 @@ if(n_peaks>=2)
     else % 2 peaks
         warning('TASBE:Beads','Only two bead peaks found, assuming brightest two');
         [poly,S] = polyfit(log10(peak_means),log10(PeakMEFLs(6:7)),1);
-        fit_error = S.normr; model = poly; first_peak = numel(PeakMEFLs)-1;
+        fit_error = S.normr; model = poly; first_peak = numel(PeakMEFLs)-1+1; % 7 vs 8 kludge
         best_i = 5; % for constrained fit and plot
     end
     constrained_fit = mean(log10(PeakMEFLs((1:n_peaks)+best_i)) - log10(peak_means));
@@ -216,7 +216,7 @@ if(n_peaks>=2)
     k_MEFL = 10^constrained_fit;
 else % 1 peak
     warning('TASBE:Beads','Only one bead peak found, assuming brightest');
-    fit_error = 0; first_peak = numel(PeakMEFLs);
+    fit_error = 0; first_peak = numel(PeakMEFLs)+1; % 7 vs. 8 kludge
     k_MEFL = PeakMEFLs(end)/peak_means;
 end;
 
