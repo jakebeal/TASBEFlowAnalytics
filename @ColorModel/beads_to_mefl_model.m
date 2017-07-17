@@ -27,6 +27,11 @@ end
 if (nargin < 5)
     path = getSetting(settings, 'path', './');
 end
+force_peak = getSetting(settings,'force_first_bead_peak',[]);
+if ~isempty(force_peak)
+    warning('TASBE:Beads','Forcing interpretation of first detected peak as peak number %i',force_peak);
+end
+
 
 peak_threshold = CM.bead_peak_threshold;
 bin_min = CM.bead_min;
@@ -206,10 +211,10 @@ if(n_peaks>=2)
         warning('TASBE:Beads','Only two bead peaks found, assuming brightest two');
         [poly,S] = polyfit(log10(peak_means),log10(PeakMEFLs(6:7)),1);
         fit_error = S.normr; model = poly; first_peak = numel(PeakMEFLs)-1+1; % 7 vs 8 kludge
-        best_i = 5; % for constrained fit and plot
     end
-    constrained_fit = mean(log10(PeakMEFLs((1:n_peaks)+best_i)) - log10(peak_means));
-    cf_error = mean(10.^abs(log10((PeakMEFLs((1:n_peaks)+best_i)./peak_means) / 10.^constrained_fit)));
+    if ~isempty(force_peak), first_peak = force_peak; end
+    constrained_fit = mean(log10(PeakMEFLs((1:n_peaks)+first_peak-2)) - log10(peak_means));
+    cf_error = mean(10.^abs(log10((PeakMEFLs((1:n_peaks)+first_peak-2)./peak_means) / 10.^constrained_fit)));
     % Final fit_error should be close to zero / 1-fold
     if(cf_error>1.05), warning('TASBE:Beads','Bead calibration may be incorrect: fit more than 5 percent off: error = %.2d',cf_error); end;
     %if(abs(model(1)-1)>0.05), warning('TASBE:Beads','Bead calibration probably incorrect: fit more than 5 percent off: slope = %.2d',model(1)); end;
@@ -217,7 +222,8 @@ if(n_peaks>=2)
 else % 1 peak
     warning('TASBE:Beads','Only one bead peak found, assuming brightest');
     fit_error = 0; first_peak = numel(PeakMEFLs)+1; % 7 vs. 8 kludge
-    k_MEFL = PeakMEFLs(end)/peak_means;
+    if ~isempty(force_peak), first_peak = force_peak; end
+    k_MEFL = PeakMEFLs(first_peak-1)/peak_means; % 7 vs. 8 kludge
 end;
 
 % Plot fitted channel
