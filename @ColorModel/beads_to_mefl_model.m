@@ -242,7 +242,10 @@ if makePlots
     text(10.^(bin_min),graph_max/2,'peak search min value','Rotation',90,'FontSize',7,'VerticalAlignment','top','FontAngle','italic');
     plot(10.^[bin_max bin_max],[0 graph_max],'k:');
     text(10.^(bin_max),graph_max/2,'peak search max value','Rotation',90,'FontSize',7,'VerticalAlignment','bottom','FontAngle','italic');
+    plot(10.^[0 range_max],[peak_threshold(i_FITC) peak_threshold(i_FITC)],'k:');
+    text(1,peak_threshold(i_FITC),'clutter threshold','FontSize',7,'HorizontalAlignment','left','VerticalAlignment','bottom','FontAngle','italic');
     title('Peak identification for SPHERO RCP-30-5A beads');
+    xlim(10.^[0 range_max]);
     if segment_secondary
         xlabel(['FACS ' segmentName ' units']); ylabel('Beads');
         outputfig(h,'bead-calibration-secondary',path);
