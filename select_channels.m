@@ -14,7 +14,7 @@ for i=1:numel(channels)
     found = false;
     for j=1:numel(fcshdr.par)
         name=getName(channels{i});
-        if(strcmp(name,fcshdr.par(j).name))
+        if(strcmp(name,fcshdr.par(j).name) || strcmp(name,fcshdr.par(j).rawname))
             selected(:,i)=rawfcs(:,j); 
             selected_par{i}=fcshdr.par(j);
             found=true; continue;
