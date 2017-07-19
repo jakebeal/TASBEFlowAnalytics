@@ -203,7 +203,7 @@ if(n_peaks>=2)
           if S.normr <= fit_error, fit_error = S.normr; model = poly; first_peak=i+2; best_i = i; end;
         end
         % Warn if setting to anything less than the top peak, since top peak should usually be visible
-        fprintf('Beak peaks identified as %i to %i of 8\n',first_peak,first_peak+n_peaks-1);
+        fprintf('Bead peaks identified as %i to %i of 8\n',first_peak,first_peak+n_peaks-1);
         if best_i < (7-n_peaks) && n_peaks < 5,
             warning('TASBE:Beads','Few bead peaks and fit does not include highest: error likely');
         end
