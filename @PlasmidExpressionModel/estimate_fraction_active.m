@@ -8,6 +8,10 @@
 
 function active = estimate_fraction_active(PEM,MEFLs)
     active = zeros(size(MEFLs));
+    if numel(PEM.fraction_active)<2
+        warning('TASBE:Analysis','Cannot compute fraction active: distribution did not fit bimodal gaussian');
+        return
+    end
     for i=1:numel(MEFLs)
         if isnan(MEFLs(i)), active(i) = NaN; continue; end;
         binCenters = get_bin_centers(PEM.bins);
