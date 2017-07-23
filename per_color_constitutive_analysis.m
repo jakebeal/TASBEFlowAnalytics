@@ -9,7 +9,7 @@
 function [results sampleresults] = per_color_constitutive_analysis(colorModel,batch_description,colors,AP)
 % The 'results' here is not a standard ExperimentResults, but a similar scratch structure
 
-warning('Need to update per_color_constitutive_analysis to use new samplestatistics');
+warning('TASBE:UpdateNeeded','Need to update per_color_constitutive_analysis to use new samplestatistics');
 
 % first do all the processing
 rawresults = cell(size(colors));

@@ -362,6 +362,13 @@ function obj = fitgmdist(data, k, varargin)
             Sigma = repmat (Sigma, [1, 1, k]);
           end
       end
+      % Initialize best_params, in case the attempted fit fails badly:
+      if isempty(best_params)
+          best_params.mu    = mu;
+          best_params.Sigma = Sigma;
+          best_params.p     = p;
+      end
+
 
       % Run the algorithm
       iter = 1;

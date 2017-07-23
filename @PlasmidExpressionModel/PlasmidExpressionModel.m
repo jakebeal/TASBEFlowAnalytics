@@ -60,8 +60,8 @@
             
             %%%% GAUSSIAN MIXTURE MODEL METHOD
             which = cfp_data>drop_threshold;
-            if(sum(which)==0)
-                warning('Model:CFPDistributionSeparation','No data to model');
+            if(sum(which)<10)
+                warning('Model:CFPDistributionSeparation','Not enough data to model');
                 PEM=class(PEM,'PlasmidExpressionModel');
                 return;
             end

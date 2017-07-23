@@ -18,6 +18,10 @@ for i=1:size(fcshdr.par,2)
       data = fcsdat(:,i); 
       hdr = fcshdr.par(i);
       return;
+  elseif (strcmp(fcshdr.par(i).rawname,color))
+      data = fcsdat(:,i); 
+      hdr = fcshdr.par(i);
+      return;
   end;
 end;
 
