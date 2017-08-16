@@ -63,7 +63,7 @@ bin_edges = 10.^(bin_min:bin_increment:bin_max);
 n = (size(bin_edges,2)-1);
 bin_centers = bin_edges(1:n)*10.^(bin_increment/2);
 
-% option of segmenting FITC on a separate seconary channel
+% option of segmenting FITC on a separate secondary channel
 segment_secondary = hasSetting(settings,'SecondaryBeadChannel');
 if segment_secondary
     segmentName = getSetting(settings,'SecondaryBeadChannel');

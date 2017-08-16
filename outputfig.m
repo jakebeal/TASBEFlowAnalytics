@@ -11,9 +11,15 @@ function outputfig(h,name,path)
 % output format with little effort
 
 % Default path is current path
-if nargin < 3, path = './'; end; % Note: this might be wrong for Windows
+if nargin < 3, path = './'; end; % Note: frontslash works for both Windows and Mac/Unix
 if path(numel(path)) ~= '/', path(numel(path)+1) = '/'; end; % ensure path ends in slash
-    
+
+% If directory doesn't exist, try to create it
+if ~isdir(path),
+    warning('TASBE:Utilities','Directory does not exist, attempting to create it: %s',path);
+    mkdir(path);
+end
+
 name = sanitize_name(name);
 %   Note: path must be added after sanitization, because path
 %   characters need to be removed in sanitization
